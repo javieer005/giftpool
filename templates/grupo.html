@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Group {{ group.id[-6:] }} - GiftPool</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Auto-refresh every 15 seconds -->
+  <meta http-equiv="refresh" content="15">
+  <style>
+    body { background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); font-family: 'Poppins', sans-serif; }
+    .card { border-radius: 14px; }
+    .badge { font-size: 0.9em; }
+  </style>
+</head>
+<body>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="fw-bold text-primary">
+      {% if group.mode == 'giftpool' %}
+        Gift for <strong>{{ group.recipient }}</strong>
+      {% else %}
+        Secret Santa
+      {% endif %}
+    </h2>
+    <a href="/" class="btn btn-outline-secondary btn-sm">Back</a>
+  </div>
+
+  <div class="row text-muted small mb-4">
+    <p><strong>Budget per person:</strong> {{ group.budget_formatted }}</p>
+    <div class="col text-end">Created: {{ group.created }}</div>
+  </div>
+
+  {% if group.mode == 'giftpool' %}
+    <!-- Gift Options with Votes -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Gift Options</h5>
+        <ol class="list-group list-group-numbered">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ group.ideas[0] }}
+            <span class="badge bg-primary rounded-pill">{{ group.votes[0] }} votes</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ group.ideas[1] }}
+            <span class="badge bg-primary rounded-pill">{{ group.votes[1] }} votes</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Payment Status Table -->
+    <h5 class="mb-3">Payment Status</h5>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for email, p in group.payments.items() %}
+            <tr>
+              <td><strong>{{ p.name }}</strong></td>
+              <td>
+                {% if p.paid %}
+                  <span class="badge bg-success">Paid</span>
+                {% else %}
+                  <span class="badge bg-warning text-dark">Pending</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+         
+            {% for email, p in group.payments.items() %}
+            <tr>
+            <td><strong>{{ p.name }}</strong></td>
+            <td>
+                {% if p.pagado %}
+                <span class="badge bg-success">Paid {{ group.budget_formatted }}</span>
+                {% else %}
+                <span class="badge bg-warning">Pending</span>
+                <!-- SIMULADOR DE PAGO (solo para pruebas) -->
+                <form action="/simulate-payment" method="POST" style="display:inline;margin-left:10px;">
+                    <input type="hidden" name="group_id" value="{{ group.id }}">
+                    <input type="hidden" name="email" value="{{ email }}">
+                    <button type="submit" class="btn btn-sm btn-outline-success">Simulate Payment</button>
+                </form>
+                {% endif %}
+            </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-info mt-4">
+      <strong>Live Update:</strong> This page refreshes every 15 seconds.
+    </div>
+
+  {% else %}
+    <!-- Secret Santa Mode -->
+    <div class="alert alert-info">
+      <h5>All assignments sent privately via email.</h5>
+      <p>Each participant received their target and gift ideas. <em>Keep it secret!</em></p>
+    </div>
+  {% endif %}
+
+  <div class="text-center mt-5">
+    <small class="text-muted">GiftPool • Real-time Group Organizer</small>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
