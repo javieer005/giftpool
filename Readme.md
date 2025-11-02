@@ -44,15 +44,6 @@
 - **Render.com** – Free hosting
 - **PayPal Sandbox** – Test environment (no real money)
 
----
-
-## Demo Video (1 min)
-
-[Watch the demo](https://your-video-link.com) *(upload to YouTube or Google Drive)*
-
----
-
-## Live Demo
 
 **Try it now:**  
 [https://giftpool.onrender.com](https://giftpool.onrender.com)
@@ -79,6 +70,6 @@ giftpool/
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/yourusername/giftpool.git
+git clone https://github.com/javieer005/giftpool
 cd giftpool
 pip install -r requirements.txt
