@@ -60,7 +60,7 @@ def get_paypal_token():
     auth = (PAYPAL_CLIENT_ID, PAYPAL_SECRET)
     headers = {'Accept': 'application/json'}
     data = {'grant_type': 'client_credentials'}
-    r = requests.post(url, auth=auth, headers=headers, data=data)
+    r = requests.post(url, auth=auth, headers=headers, data=data, timeout=10)
     return r.json().get('access_token') if r.status_code == 200 else None
 
 # === CREATE PAYPAL ORDER ===
