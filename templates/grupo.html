@@ -65,33 +65,14 @@
             <tr>
               <td><strong>{{ p.name }}</strong></td>
               <td>
-                {% if p.paid %}
-                  <span class="badge bg-success">Paid</span>
+                {% if p.paid %}  
+                  <span class="badge bg-success">Paid {{ group.budget_formatted }}</span>
                 {% else %}
                   <span class="badge bg-warning text-dark">Pending</span>
                 {% endif %}
               </td>
             </tr>
           {% endfor %}
-         
-            {% for email, p in group.payments.items() %}
-            <tr>
-            <td><strong>{{ p.name }}</strong></td>
-            <td>
-                {% if p.pagado %}
-                <span class="badge bg-success">Paid {{ group.budget_formatted }}</span>
-                {% else %}
-                <span class="badge bg-warning">Pending</span>
-                <!-- SIMULADOR DE PAGO (solo para pruebas) -->
-                <form action="/simulate-payment" method="POST" style="display:inline;margin-left:10px;">
-                    <input type="hidden" name="group_id" value="{{ group.id }}">
-                    <input type="hidden" name="email" value="{{ email }}">
-                    <button type="submit" class="btn btn-sm btn-outline-success">Simulate Payment</button>
-                </form>
-                {% endif %}
-            </td>
-            </tr>
-            {% endfor %}
         </tbody>
       </table>
     </div>

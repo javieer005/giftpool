@@ -138,7 +138,7 @@ def index():
                 'name': name,
                 'paypal_order_id': order['id'],
                 'paypal_link': order['approve_url'],
-                'pagado': False
+                'paid': False
             }
 
             # === EMAIL CON EUROS ===
@@ -181,7 +181,7 @@ def paypal_webhook():
             for email, p in g['payments'].items():
                 if p.get('paypal_order_id') == order_id:
                     if capture_paypal_order(order_id):
-                        p['pagado'] = True
+                        p['paid'] = True
                         name = p['name']
                         for e in g['emails']:
                             send_email(e, "Payment confirmed!", f"<strong>{name}</strong> paid {g['budget_formatted']}!")
@@ -194,7 +194,7 @@ def simulate_payment():
     group_id = request.form['group_id']
     email = request.form['email']
     if group_id in groups and email in groups[group_id]['payments']:
-        groups[group_id]['payments'][email]['pagado'] = True
+        groups[group_id]['payments'][email]['paid'] = True
         name = groups[group_id]['payments'][email]['name']
         for e in groups[group_id]['emails']:
             send_email(e, "Payment simulated!", f"<strong>{name}</strong> paid {groups[group_id]['budget_formatted']} (demo).")
@@ -215,7 +215,7 @@ def send_reminders():
     for gid, g in list(groups.items()):
         if g['mode'] == 'giftpool':
             for email, p in g['payments'].items():
-                if not p['pagado']:
+                if not p['paid']:
                     send_email(email, "Reminder", f"Please pay {g['budget_formatted']} for {g['recipient']}.")
 
 schedule.every().day.at("09:00").do(send_reminders)
